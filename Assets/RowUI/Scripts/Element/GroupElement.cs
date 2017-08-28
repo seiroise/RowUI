@@ -9,7 +9,7 @@ namespace RowUI {
 	/// <summary>
 	/// 幾つかのUI要素をまとめて表示する要素
 	/// </summary>
-	public class UIGroupElement : UIBuilderElement {
+	public class GroupElement : BuilderElement {
 
 		/// <summary>
 		/// 開閉用ヘッダーボタン
@@ -24,18 +24,13 @@ namespace RowUI {
 		}
 
 		[SerializeField]
-		private UIBuilder _builder;
+		private Builder _builder;
 
-		public UIBuilder builder {
+		public Builder builder {
 			get {
 				return _builder;
 			}
 		}
-
-		/// <summary>
-		/// 閉じているか
-		/// </summary>
-		private bool _isClosed = false;
 
 		protected override void Awake() {
 			base.Awake();
@@ -47,7 +42,7 @@ namespace RowUI {
 		/// </summary>
 		/// <returns>The height.</returns>
 		public override float GetHeight() {
-			if (_isClosed) {
+			if (_builder.isClosed) {
 				return base.GetHeight();
 			} else {
 				return _builder.GetHeight() + rectTransform.sizeDelta.y + _builder.settings.interval;
@@ -58,11 +53,9 @@ namespace RowUI {
 		/// ヘッダーボタンのクリック
 		/// </summary>
 		private void OnHeaderButtonClicked() {
-			if (_isClosed) {
-				_isClosed = false;
+			if (_builder.isClosed) {
 				_builder.Open();
 			} else {
-				_isClosed = true;
 				_builder.Close();
 			}
 		}

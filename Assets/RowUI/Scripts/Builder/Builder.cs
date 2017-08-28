@@ -6,17 +6,17 @@ using UnityEngine.Events;
 namespace RowUI {
 
 	/// <summary>
-	/// 新しいUIビルダーのテスト
+	/// UIのビルダー
 	/// </summary>
-	public class UIBuilder : UIBuilderElement {
+	public class Builder : BuilderElement {
 
 		/// <summary>
 		/// ビルダーのセッテイング
 		/// </summary>
 		[SerializeField]
-		private UIBuilderSettings _settings;
+		private BuilderSettings _settings;
 
-		public UIBuilderSettings settings {
+		public BuilderSettings settings {
 			get {
 				return _settings;
 			}
@@ -28,16 +28,27 @@ namespace RowUI {
 		/// <summary>
 		/// 管理している要素
 		/// </summary>
-		private List<UIBuilderElement> _elements;
+		private List<BuilderElement> _elements;
 
 		/// <summary>
 		/// 親要素
 		/// </summary>
-		private UIBuilder _parent;
+		private Builder _parent;
+
+		/// <summary>
+		/// 閉じた状態か
+		/// </summary>
+		private bool _isClosed = false;
+
+		public bool isClosed {
+			get {
+				return _isClosed;
+			}
+		}
 
 		protected override void Awake() {
 			base.Awake();
-			_elements = new List<UIBuilderElement>();
+			_elements = new List<BuilderElement>();
 		}
 
 		/// <summary>
@@ -65,6 +76,7 @@ namespace RowUI {
 		/// すべての要素を非activeにして閉じた状態にする
 		/// </summary>
 		public void Close() {
+			_isClosed = true;
 			for (int i = 0; i < _elements.Count; ++i) {
 				_elements[i].gameObject.SetActive(false);
 			}
@@ -81,6 +93,7 @@ namespace RowUI {
 		/// すべての要素をactiveにして開いた状態にする
 		/// </summary>
 		public void Open() {
+			_isClosed = false;
 			for (int i = 0; i < _elements.Count; ++i) {
 				_elements[i].gameObject.SetActive(true);
 			}
@@ -124,22 +137,10 @@ namespace RowUI {
 		/// 要素の追加
 		/// </summary>
 		/// <param name="elem">Element.</param>
-		private void AddElement(UIBuilderElement elem) {
+		private void AddElement(BuilderElement elem) {
 			_elements.Add(elem);
 			UpdateSize();
 			UpdateElementsPosition();
-		}
-
-		/// <summary>
-		/// 要素の削除
-		/// </summary>
-		/// <param name="elem">Element.</param>
-		public void RemoveElement(UIBuilderElement elem) {
-			if (_elements.Remove(elem)) {
-				Destroy(elem.gameObject);
-				UpdateSize();
-				UpdateElementsPosition();
-			}
 		}
 
 		/// <summary>
@@ -148,7 +149,7 @@ namespace RowUI {
 		/// <returns>The element.</returns>
 		/// <param name="prefab">Prefab.</param>
 		/// <typeparam name="T">The 1st type parameter.</typeparam>
-		private T MakeElement<T>(T prefab) where T : UIBuilderElement {
+		private T MakeElement<T>(T prefab) where T : BuilderElement {
 			var elem = Instantiate<T>(prefab);
 			var rect = elem.rectTransform;
 			rect.SetParent(this.transform, false);
@@ -167,6 +168,41 @@ namespace RowUI {
 		}
 
 		/// <summary>
+		/// 要素を生成した後処理
+		/// </summary>
+		/// <param name="elem">Element.</param>
+		private void MakedElement(BuilderElement elem) {
+			if (_isClosed) {
+				elem.gameObject.SetActive(false);
+			}
+			AddElement(elem);
+		}
+
+		/// <summary>
+		/// 要素の削除
+		/// </summary>
+		/// <param name="elem">Element.</param>
+		public void RemoveElement(BuilderElement elem) {
+			if (_elements.Remove(elem)) {
+				Destroy(elem.gameObject);
+				UpdateSize();
+				UpdateElementsPosition();
+			}
+		}
+
+		/// <summary>
+		/// すべての要素の削除
+		/// </summary>
+		public void RemoveElements() {
+			for (int i = 0; i < _elements.Count; ++i) {
+				Destroy(_elements[i].gameObject);
+			}
+			_elements.Clear();
+			UpdateSize();
+			UpdateElementsPosition();
+		}
+
+		/// <summary>
 		/// 実数値を編集するための要素を作成する
 		/// </summary>
 		/// <returns>The float value element.</returns>
@@ -175,8 +211,8 @@ namespace RowUI {
 		/// <param name="min">Minimum.</param>
 		/// <param name="max">Max.</param>
 		/// <param name="callback">Callback.</param>
-		public UIFloatValueElement MakeFloatValueElement(string label, float value, float min, float max, UnityAction<float> callback) {
-			var elem = MakeElement<UIFloatValueElement>(_settings.floatValueElement);
+		public FloatValueElement MakeFloatValue(string label, float value, float min, float max, UnityAction<float> callback) {
+			var elem = MakeElement<FloatValueElement>(_settings.floatValueElement);
 
 			elem.label.text = label;
 			elem.valueField.SetValue(value, min, max);
@@ -184,7 +220,7 @@ namespace RowUI {
 			elem.valueField.onValueChanged.RemoveListener(callback);
 			elem.valueField.onValueChanged.AddListener(callback);
 
-			AddElement(elem);
+			MakedElement(elem);
 
 			return elem;
 		}
@@ -196,8 +232,8 @@ namespace RowUI {
 		/// <param name="label">Label.</param>
 		/// <param name="value">Value.</param>
 		/// <param name="callback">Callback.</param>
-		public UIStringValueElement MakeStringValueElement(string label, string value, UnityAction<string> callback) {
-			var elem = MakeElement<UIStringValueElement>(_settings.stringValueElement);
+		public StringValueElement MakeStringValue(string label, string value, UnityAction<string> callback) {
+			var elem = MakeElement<StringValueElement>(_settings.stringValueElement);
 
 			elem.label.text = label;
 			elem.inputField.text = value;
@@ -205,23 +241,61 @@ namespace RowUI {
 			elem.inputField.onEndEdit.RemoveListener(callback);
 			elem.inputField.onEndEdit.AddListener(callback);
 
-			AddElement(elem);
+			MakedElement(elem);
 
 			return elem;
 		}
 
+		/// <summary>
+		/// 真偽値を編集するための要素を作成する
+		/// </summary>
+		/// <returns>The bool value.</returns>
+		/// <param name="label">Label.</param>
+		/// <param name="value">If set to <c>true</c> value.</param>
+		/// <param name="callback">Callback.</param>
+		public BoolValueElement MakeBoolValue(string label, bool value, UnityAction<bool> callback) {
+			var elem = MakeElement<BoolValueElement>(_settings.boolValueElement);
+
+			elem.label.text = label;
+			elem.toggle.isOn = value;
+
+			elem.toggle.onValueChanged.RemoveListener(callback);
+			elem.toggle.onValueChanged.AddListener(callback);
+
+			MakedElement(elem);
+
+			return elem;
+		}
 
 		/// <summary>
 		/// ラベルを表示する要素を作成する
 		/// </summary>
 		/// <returns>The label element.</returns>
 		/// <param name="label">Label.</param>
-		public UILabelElement MakeLabelElement(string label) {
-			var elem = MakeElement<UILabelElement>(_settings.labelElement);
+		public LabelElement MakeLabel(string label) {
+			var elem = MakeElement<LabelElement>(_settings.labelElement);
 
 			elem.label.text = label;
 
-			AddElement(elem);
+			MakedElement(elem);
+
+			return elem;
+		}
+
+		/// <summary>
+		/// ボタンを表示する要素を作成する
+		/// </summary>
+		/// <returns>The label element.</returns>
+		/// <param name="label">Label.</param>
+		public ButtonElement MakeButton(string label, UnityAction callback) {
+			var elem = MakeElement<ButtonElement>(_settings.buttonElement);
+
+			elem.label.text = label;
+
+			elem.button.onClick.RemoveListener(callback);
+			elem.button.onClick.AddListener(callback);
+
+			MakedElement(elem);
 
 			return elem;
 		}
@@ -234,17 +308,18 @@ namespace RowUI {
 		/// <param name="select">Select.</param>
 		/// <param name="options">Options.</param>
 		/// <param name="callback">Callback.</param>
-		public UIDropdownElement MakeDropdownElement(string label, int select, string[] options, UnityAction<int> callback) {
-			var elem = MakeElement<UIDropdownElement>(_settings.dropdownElement);
+		public DropdownElement MakeDropdown(string label, int select, string[] options, UnityAction<int> callback) {
+			var elem = MakeElement<DropdownElement>(_settings.dropdownElement);
 
 			elem.label.text = label;
 			elem.dropdown.ClearOptions();
 			elem.dropdown.AddOptions(new List<string>(options));
+			elem.dropdown.value = select;
 
 			elem.dropdown.onValueChanged.RemoveListener(callback);
 			elem.dropdown.onValueChanged.AddListener(callback);
 
-			AddElement(elem);
+			MakedElement(elem);
 
 			return elem;
 		}
@@ -254,14 +329,41 @@ namespace RowUI {
 		/// </summary>
 		/// <returns>The element group.</returns>
 		/// <param name="label">Label.</param>
-		public UIGroupElement MakeElementGroup(string label) {
-			var elem = MakeElement<UIGroupElement>(_settings.groupElement);
+		public GroupElement MakeGroup(string label) {
+			var elem = MakeElement<GroupElement>(_settings.groupElement);
 
 			elem.label.text = label;
 			elem.builder._parent = this;
 			elem.builder.settings = _settings;
 
-			AddElement(elem);
+			MakedElement(elem);
+
+			return elem;
+		}
+
+		/// <summary>
+		/// ドロップダウン付きのグループ要素を作成する
+		/// </summary>
+		/// <returns>The dropdown group.</returns>
+		/// <param name="label">Label.</param>
+		/// <param name="select">Select.</param>
+		/// <param name="options">Options.</param>
+		/// <param name="callback">Callback.</param>
+		public DropdownGroupElement MakeDropdownGroup(string label, int select, string[] options, UnityAction<int> callback) {
+			var elem = MakeElement<DropdownGroupElement>(_settings.dropdownGroupElement);
+
+			elem.label.text = label;
+			elem.builder._parent = this;
+			elem.builder.settings = _settings;
+
+			elem.dropdown.ClearOptions();
+			elem.dropdown.AddOptions(new List<string>(options));
+			elem.dropdown.value = select;
+
+			elem.dropdown.onValueChanged.RemoveListener(callback);
+			elem.dropdown.onValueChanged.AddListener(callback);
+
+			MakedElement(elem);
 
 			return elem;
 		}

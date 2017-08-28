@@ -9,7 +9,7 @@ namespace RowUI {
 	/// UIBuilderで扱う要素
 	/// </summary>
 	[RequireComponent(typeof(RectTransform))]
-	public abstract class UIBuilderElement : MonoBehaviour {
+	public abstract class BuilderElement : MonoBehaviour {
 
 		/// <summary>
 		/// 背景

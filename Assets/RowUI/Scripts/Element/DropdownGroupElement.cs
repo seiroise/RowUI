@@ -6,9 +6,9 @@ using UnityEngine.UI;
 namespace RowUI {
 
 	/// <summary>
-	/// 幾つかの項目をドロップダウンで表示する要素
+	/// GroupElementにDropdownが合体したもの
 	/// </summary>
-	public class UIDropdownElement : UIBuilderElement {
+	public class DropdownGroupElement : GroupElement {
 
 		[SerializeField]
 		private Dropdown _dropdown;

@@ -6,16 +6,16 @@ using UnityEngine.UI;
 namespace RowUI {
 
 	/// <summary>
-	/// 文字列を扱う要素
+	/// ボタン要素
 	/// </summary>
-	public class UIStringValueElement : UIBuilderElement {
+	public class ButtonElement : BuilderElement {
 
 		[SerializeField]
-		private InputField _inputField;
+		private Button _button;
 
-		public InputField inputField {
+		public Button button {
 			get {
-				return _inputField;
+				return _button;
 			}
 		}
 	}

@@ -7,5 +7,5 @@ namespace RowUI {
 	/// <summary>
 	/// ラベルのみのUI要素
 	/// </summary>
-	public class UILabelElement : UIBuilderElement { }
+	public class LabelElement : BuilderElement { }
 }
