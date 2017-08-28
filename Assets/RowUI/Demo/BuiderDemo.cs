@@ -15,7 +15,7 @@ namespace RowUI.Demo {
 		void Start() {
 			builder.MakeLabel("demo");
 			builder.MakeFloatValue("value", 1, 0, 10, OnFloatValueChange);
-			builder.MakeDropdown("Type", 0, new string[] { "A", "B", "C", "D" }, OnValueChange02);
+			builder.MakeDropdown("Type", 0, new string[] { "A", "B", "C", "D" }, OnDropdownChanged);
 
 			var group = builder.MakeGroup("Group A");
 			group.builder.MakeFloatValue("Sub Parameter A", 1, 0, 10, OnFloatValueChange);
@@ -44,19 +44,19 @@ namespace RowUI.Demo {
 		}
 
 		private void OnFloatValueChange(float v) {
-			Debug.Log("OnFloatValueChange : " + v);
+			Debug.Log("OnFloatValueChanged : " + v);
 		}
 
 		private void OnBoolValueChnaged(bool v) {
-			Debug.Log("OnBoolValueChange : " + v);
+			Debug.Log("OnBoolValueChanged : " + v);
 		}
 
 		private void OnButtonClicked() {
-			
+			Debug.Log("OButtonClicked");
 		}
 
-		private void OnValueChange02(int i) {
-
+		private void OnDropdownChanged(int i) {
+			Debug.Log("OnDropdownChanged : " + i);
 		}
 
 		private void OnEndEdit(string str) {
