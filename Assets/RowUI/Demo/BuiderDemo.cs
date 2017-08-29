@@ -14,33 +14,33 @@ namespace RowUI.Demo {
 		// Use this for initialization
 		void Start() {
 			builder.MakeLabel("demo");
-			builder.MakeFloatValue("value", 1, 0, 10, OnFloatValueChange);
+			builder.MakeFloatSlider("value", 1, 0, 10, OnFloatValueChange);
 			builder.MakeDropdown("Type", 0, new string[] { "A", "B", "C", "D" }, OnDropdownChanged);
 
 			var group = builder.MakeGroup("Group A");
-			group.builder.MakeFloatValue("Sub Parameter A", 1, 0, 10, OnFloatValueChange);
-			group.builder.MakeFloatValue("Sub Parameter B", 1, 0, 10, OnFloatValueChange);
-			group.builder.MakeFloatValue("Sub Parameter C", 1, 0, 10, OnFloatValueChange);
+			group.builder.MakeFloatSlider("Sub Parameter A", 1, 0, 10, OnFloatValueChange);
+			group.builder.MakeFloatSlider("Sub Parameter B", 1, 0, 10, OnFloatValueChange);
+			group.builder.MakeFloatSlider("Sub Parameter C", 1, 0, 10, OnFloatValueChange);
 
 			group = builder.MakeGroup("Group B");
-			group.builder.MakeFloatValue("Sub Parameter A", 1, 0, 10, OnFloatValueChange);
-			group.builder.MakeFloatValue("Sub Parameter B", 1, 0, 10, OnFloatValueChange);
-			group.builder.MakeFloatValue("Sub Parameter C", 1, 0, 10, OnFloatValueChange);
+			group.builder.MakeFloatSlider("Sub Parameter A", 1, 0, 10, OnFloatValueChange);
+			group.builder.MakeFloatSlider("Sub Parameter B", 1, 0, 10, OnFloatValueChange);
+			group.builder.MakeFloatSlider("Sub Parameter C", 1, 0, 10, OnFloatValueChange);
 
 			group = group.builder.MakeGroup("Group BA");
-			group.builder.MakeFloatValue("Sub Parameter A", 1, 0, 10, OnFloatValueChange);
-			group.builder.MakeFloatValue("Sub Parameter B", 1, 0, 10, OnFloatValueChange);
-			group.builder.MakeFloatValue("Sub Parameter C", 1, 0, 10, OnFloatValueChange);
+			group.builder.MakeFloatSlider("Sub Parameter A", 1, 0, 10, OnFloatValueChange);
+			group.builder.MakeFloatSlider("Sub Parameter B", 1, 0, 10, OnFloatValueChange);
+			group.builder.MakeFloatSlider("Sub Parameter C", 1, 0, 10, OnFloatValueChange);
 
 			_gD = builder.MakeDropdownGroup("Group D", 0, _types, OnTypeChanged);
 			OnTypeChanged(0);
 
 			group = builder.MakeGroup("Group C");
-			group.builder.MakeFloatValue("Sub Parameter A", 1, 0, 10, OnFloatValueChange);
-			group.builder.MakeFloatValue("Sub Parameter B", 1, 0, 10, OnFloatValueChange);
-			group.builder.MakeFloatValue("Sub Parameter C", 1, 0, 10, OnFloatValueChange);
+			group.builder.MakeFloatSlider("Sub Parameter A", 1, 0, 10, OnFloatValueChange);
+			group.builder.MakeFloatSlider("Sub Parameter B", 1, 0, 10, OnFloatValueChange);
+			group.builder.MakeFloatSlider("Sub Parameter C", 1, 0, 10, OnFloatValueChange);
 
-			group.builder.MakeStringValue("Sub Text", "", OnEndEdit);
+			group.builder.MakeString("Sub Text", "", OnEndEdit);
 		}
 
 		private void OnFloatValueChange(float v) {
@@ -68,22 +68,22 @@ namespace RowUI.Demo {
 			if (_gD) {
 				switch (i) {
 				case 0:
-					_gD.builder.MakeFloatValue("Melee damage", 10, 1, 100, OnFloatValueChange);
-					_gD.builder.MakeFloatValue("Fire", 10, 1, 100, OnFloatValueChange);
-					_gD.builder.MakeFloatValue("Ice", 10, 1, 100, OnFloatValueChange);
-					_gD.builder.MakeBoolValue("Guard", false, OnBoolValueChnaged);
+					_gD.builder.MakeFloatSlider("Melee damage", 10, 1, 100, OnFloatValueChange);
+					_gD.builder.MakeFloatSlider("Fire", 10, 1, 100, OnFloatValueChange);
+					_gD.builder.MakeFloatSlider("Ice", 10, 1, 100, OnFloatValueChange);
+					_gD.builder.MakeBool("Super", false, OnBoolValueChnaged);
 					_gD.builder.MakeButton("Attack", OnButtonClicked);
 					break;
 				case 1:
-					_gD.builder.MakeFloatValue("Melee damage", 10, 1, 100, OnFloatValueChange);
-					_gD.builder.MakeFloatValue("Impact", 10, 1, 100, OnFloatValueChange);
-					_gD.builder.MakeFloatValue("Range", 10, 1, 100, OnFloatValueChange);
-					_gD.builder.MakeFloatValue("Fire", 10, 1, 100, OnFloatValueChange);
+					_gD.builder.MakeFloatSlider("Melee damage", 10, 1, 100, OnFloatValueChange);
+					_gD.builder.MakeFloatSlider("Impact", 10, 1, 100, OnFloatValueChange);
+					_gD.builder.MakeFloatSlider("Range", 10, 1, 100, OnFloatValueChange);
+					_gD.builder.MakeFloatSlider("Fire", 10, 1, 100, OnFloatValueChange);
 					break;
 				case 2:
-					_gD.builder.MakeFloatValue("Indirect damage", 10, 1, 100, OnFloatValueChange);
-					_gD.builder.MakeFloatValue("Poison", 10, 1, 100, OnFloatValueChange);
-					_gD.builder.MakeFloatValue("Range", 10, 1, 100, OnFloatValueChange);
+					_gD.builder.MakeFloatSlider("Indirect damage", 10, 1, 100, OnFloatValueChange);
+					_gD.builder.MakeFloatSlider("Poison", 10, 1, 100, OnFloatValueChange);
+					_gD.builder.MakeFloatSlider("Range", 10, 1, 100, OnFloatValueChange);
 					break;
 				}
 			}

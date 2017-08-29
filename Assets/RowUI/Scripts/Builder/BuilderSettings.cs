@@ -12,14 +12,38 @@ namespace RowUI {
 		[Header("UI Element")]
 
 		/// <summary>
+		/// 整数値を扱うための要素
+		/// </summary>
+		[SerializeField]
+		private IntElement _intElement;
+
+		public IntElement intElement {
+			get {
+				return _intElement;
+			}
+		}
+
+		/// <summary>
+		/// 実数値を扱うための要素
+		/// </summary>
+		[SerializeField]
+		private FloatElement _floatElement;
+
+		public FloatElement floatElement {
+			get {
+				return _floatElement;
+			}
+		}
+
+		/// <summary>
 		/// 実数を表示するための要素
 		/// </summary>
 		[SerializeField]
-		private FloatValueElement _floatValueElement;
+		private FloatSliderElement _floatSliderElement;
 
-		public FloatValueElement floatValueElement {
+		public FloatSliderElement floatSliderElement {
 			get {
-				return _floatValueElement;
+				return _floatSliderElement;
 			}
 		}
 
@@ -27,11 +51,11 @@ namespace RowUI {
 		/// 文字列を編集するための要素
 		/// </summary>
 		[SerializeField]
-		private StringValueElement _stringValueElement;
+		private StringElement _stringElement;
 
-		public StringValueElement stringValueElement {
+		public StringElement stringElement {
 			get {
-				return _stringValueElement;
+				return _stringElement;
 			}
 		}
 
@@ -39,11 +63,11 @@ namespace RowUI {
 		/// 真偽値を表示するための要素
 		/// </summary>
 		[SerializeField]
-		private BoolValueElement _boolValueElement;
+		private BoolElement _boolElement;
 
-		public BoolValueElement boolValueElement {
+		public BoolElement boolElement {
 			get {
-				return _boolValueElement;
+				return _boolElement;
 			}
 		}
 
@@ -104,6 +128,15 @@ namespace RowUI {
 		public DropdownGroupElement dropdownGroupElement {
 			get {
 				return _dropdownGroupElement;
+			}
+		}
+
+		[SerializeField]
+		private InstanceElement _instanceElement;
+
+		public InstanceElement instanceElement {
+			get {
+				return _instanceElement;
 			}
 		}
 

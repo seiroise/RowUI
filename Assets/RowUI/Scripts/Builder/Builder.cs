@@ -46,8 +46,7 @@ namespace RowUI {
 			}
 		}
 
-		protected override void Awake() {
-			base.Awake();
+		private void Awake() {
 			_elements = new List<BuilderElement>();
 		}
 
@@ -155,7 +154,7 @@ namespace RowUI {
 			rect.SetParent(this.transform, false);
 
 			// 大きさ
-			rect.sizeDelta = new Vector2(-_settings.interval * 2, 20f);
+			rect.sizeDelta = new Vector2(-_settings.interval * 2, rect.sizeDelta.y);
 
 			// 親がいる場合はpivotを調整
 			if (_parent) {
@@ -203,6 +202,48 @@ namespace RowUI {
 		}
 
 		/// <summary>
+		/// 整数値を扱うための要素を作成する
+		/// </summary>
+		/// <returns>The int.</returns>
+		/// <param name="label">Label.</param>
+		/// <param name="value">Value.</param>
+		/// <param name="callback">Callback.</param>
+		public IntElement MakeInt(string label, int value, UnityAction<int> callback) {
+			var elem = MakeElement<IntElement>(_settings.intElement);
+
+			elem.label.text = label;
+			elem.inputField.text = value.ToString();
+
+			elem.onValueChanged.RemoveListener(callback);
+			elem.onValueChanged.AddListener(callback);
+
+			MakedElement(elem);
+
+			return elem;
+		}
+
+		/// <summary>
+		/// 実数値を扱うための要素を作成する
+		/// </summary>
+		/// <returns>The float.</returns>
+		/// <param name="label">Label.</param>
+		/// <param name="value">Value.</param>
+		/// <param name="callback">Callback.</param>
+		public FloatElement MakeFloat(string label, float value, UnityAction<float> callback) {
+			var elem = MakeElement<FloatElement>(_settings.floatElement);
+
+			elem.label.text = label;
+			elem.inputField.text = value.ToString();
+
+			elem.onValueChanged.RemoveListener(callback);
+			elem.onValueChanged.AddListener(callback);
+
+			MakedElement(elem);
+
+			return elem;
+		}
+
+		/// <summary>
 		/// 実数値を編集するための要素を作成する
 		/// </summary>
 		/// <returns>The float value element.</returns>
@@ -211,8 +252,8 @@ namespace RowUI {
 		/// <param name="min">Minimum.</param>
 		/// <param name="max">Max.</param>
 		/// <param name="callback">Callback.</param>
-		public FloatValueElement MakeFloatValue(string label, float value, float min, float max, UnityAction<float> callback) {
-			var elem = MakeElement<FloatValueElement>(_settings.floatValueElement);
+		public FloatSliderElement MakeFloatSlider(string label, float value, float min, float max, UnityAction<float> callback) {
+			var elem = MakeElement<FloatSliderElement>(_settings.floatSliderElement);
 
 			elem.label.text = label;
 			elem.valueField.SetValue(value, min, max);
@@ -232,8 +273,8 @@ namespace RowUI {
 		/// <param name="label">Label.</param>
 		/// <param name="value">Value.</param>
 		/// <param name="callback">Callback.</param>
-		public StringValueElement MakeStringValue(string label, string value, UnityAction<string> callback) {
-			var elem = MakeElement<StringValueElement>(_settings.stringValueElement);
+		public StringElement MakeString(string label, string value, UnityAction<string> callback) {
+			var elem = MakeElement<StringElement>(_settings.stringElement);
 
 			elem.label.text = label;
 			elem.inputField.text = value;
@@ -253,8 +294,8 @@ namespace RowUI {
 		/// <param name="label">Label.</param>
 		/// <param name="value">If set to <c>true</c> value.</param>
 		/// <param name="callback">Callback.</param>
-		public BoolValueElement MakeBoolValue(string label, bool value, UnityAction<bool> callback) {
-			var elem = MakeElement<BoolValueElement>(_settings.boolValueElement);
+		public BoolElement MakeBool(string label, bool value, UnityAction<bool> callback) {
+			var elem = MakeElement<BoolElement>(_settings.boolElement);
 
 			elem.label.text = label;
 			elem.toggle.isOn = value;
@@ -362,6 +403,26 @@ namespace RowUI {
 
 			elem.dropdown.onValueChanged.RemoveListener(callback);
 			elem.dropdown.onValueChanged.AddListener(callback);
+
+			MakedElement(elem);
+
+			return elem;
+		}
+
+		/// <summary>
+		/// インスタンス要素を作成する
+		/// </summary>
+		/// <returns>The instance.</returns>
+		/// <param name="label">Label.</param>
+		/// <param name="ins">Ins.</param>
+		public InstanceElement MakeInstance(string label, object ins) {
+			var elem = MakeElement<InstanceElement>(_settings.instanceElement);
+
+			elem.label.text = label;
+			elem.builder._parent = this;
+			elem.builder.settings = _settings;
+
+			elem.SetInstance(ins);
 
 			MakedElement(elem);
 

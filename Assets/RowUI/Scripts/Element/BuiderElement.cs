@@ -42,12 +42,9 @@ namespace RowUI {
 
 		public RectTransform rectTransform {
 			get {
+				if (!_rectTransform) _rectTransform = GetComponent<RectTransform>();
 				return _rectTransform;
 			}
-		}
-
-		protected virtual void Awake() {
-			_rectTransform = GetComponent<RectTransform>();
 		}
 
 		/// <summary>
@@ -55,7 +52,7 @@ namespace RowUI {
 		/// </summary>
 		/// <returns>The height.</returns>
 		public virtual float GetHeight() {
-			return _rectTransform.sizeDelta.y;
+			return rectTransform.sizeDelta.y;
 		}
 
 		/// <summary>
@@ -63,8 +60,8 @@ namespace RowUI {
 		/// </summary>
 		/// <returns>The minimum.</returns>
 		public virtual float GetMin() {
-			float min = _rectTransform.anchoredPosition.y;
-			min -= _rectTransform.sizeDelta.y;
+			float min = rectTransform.anchoredPosition.y;
+			min -= rectTransform.sizeDelta.y;
 			return min;
 		}
 	}

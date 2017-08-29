@@ -32,8 +32,7 @@ namespace RowUI {
 			}
 		}
 
-		protected override void Awake() {
-			base.Awake();
+		private void Awake() {
 			_headerButton.onClick.AddListener(OnHeaderButtonClicked);
 		}
 
